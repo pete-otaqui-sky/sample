@@ -1,0 +1,45 @@
+platform: linux
+inputs:
+  - name: ref
+  - name: pipeline-status-master
+outputs:
+  - name: pipeline-status-master-updated
+image_resource:
+  type: docker-image
+  source: { repository: alpine }
+run:
+  path: /bin/sh
+  args:
+    - -exc
+    - |
+
+      REF=`cat ref/ref`
+
+      git clone pipeline-status-master pipeline-status-master-updated
+
+      cd pipeline-status-master-updated
+
+      mkdir $REF
+
+      # Required jobs should be passed in as "params" (environment variables):
+      # REQUIRED_JOB_1=install-dependencies-job-name
+      # REQUIRED_JOB_2=run-lint-job-name
+      # REQUIRED_JOB_3=run-tests-job-name
+      # REQUIRED_JOB_FOO=dont-depend-on-ordering-job-name
+
+      for NAME in $(awk "END { for (name in ENVIRON) { print name; }}" < /dev/null)
+      do
+        if [[ $NAME == 'REQUIRED_JOB_'* ]]; then
+          VAL="$(awk "END { printf ENVIRON[\"$NAME\"]; }" < /dev/null)"
+          touch $REF/$VAL
+        fi
+      done
+
+
+
+      git add .
+
+      git config --global user.name "pete-otaqui-sky"
+      git config --global user.email "pete-otaqui@sky.uk"
+
+      git commit -m "Added required files for $REF"

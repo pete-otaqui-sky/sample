@@ -1,0 +1,29 @@
+platform: linux
+inputs:
+  - name: ref
+  - name: pipeline-status-master
+outputs:
+  - name: pipeline-status-master-updated
+image_resource:
+  type: docker-image
+  source: { repository: alpine }
+run:
+  path: /bin/sh
+  args:
+    - -exc
+    - |
+
+      REF=`cat ref/ref`
+
+      git clone pipeline-status-master pipeline-status-master-updated
+
+      cd pipeline-status-master-updated
+
+      echo $STATUS > $REF/$JOB_NAME
+
+      git add .
+
+      git config --global user.name "pete-otaqui-sky"
+      git config --global user.email "pete-otaqui@sky.uk"
+
+      git commit -m "Added required files for $REF"

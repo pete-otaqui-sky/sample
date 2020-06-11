@@ -12,5 +12,7 @@ run:
     - -exc
     - |
       #!/bin/sh
+      set -e
+      set +x
 
       cat src/.git/ref > ref/ref
