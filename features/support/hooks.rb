@@ -7,7 +7,7 @@ def post_to_top(type, duration)
   timeUTC = timeNow.utc.iso8601
   timeLong = timeNow.to_i
   Kernel.puts "TIME #{timeNow} #{timeUTC} #{timeLong}"
-  server_url = "#{ENV["ELASTICSEARCH_URL"]}/scs-data-concourse/cucumber"
+  server_url = "#{ENV["ELASTICSEARCH_URL"]}"
   dataset = "#{ENV["BUILD_TEAM_NAME"]}.#{ENV["BUILD_PIPELINE_NAME"]}.#{ENV["BUILD_ID"]}.#{ENV["BUILD_JOB_NAME"]}"
   doc = {
     "@timestamp": timeUTC,
