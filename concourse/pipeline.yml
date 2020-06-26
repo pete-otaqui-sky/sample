@@ -1,0 +1,111 @@
+---
+resource_types:
+  - name: meta
+    type: docker-image
+    source:
+      repository: swce/metadata-resource
+
+resources:
+  - name: src
+    type: git
+    source:
+      uri: https://github.com/pete-otaqui-sky/sample.git
+      branch: master
+  - name: meta
+    type: meta
+  - name: test-runner
+    type: registry-image
+    source:
+      repository: docker.io/peteotaqui/test-runner
+      tag: 1.0.0
+
+jobs:
+  - name: print-meta
+    plan:
+      - get: meta
+      - get: src
+        trigger: true
+      - task: print-meta
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source: { repository: alpine }
+          inputs:
+            - name: meta
+            - name: src
+          run:
+            path: /bin/sh
+            args:
+              - -exc
+              - |
+                set +x
+
+                ATC_EXTERNAL_URL=`cat meta/atc-external-url`
+                BUILD_ID=`cat meta/build-id`
+                BUILD_JOB_NAME=`cat meta/build-job-name`
+                BUILD_NAME=`cat meta/build-name`
+                BUILD_PIPELINE_NAME=`cat meta/build-pipeline-name`
+                BUILD_TEAM_NAME=`cat meta/build-team-name`
+
+                echo "ATC_EXTERNAL_URL=$ATC_EXTERNAL_URL"
+                echo "BUILD_ID=$BUILD_ID"
+                echo "BUILD_JOB_NAME=$BUILD_JOB_NAME"
+                echo "BUILD_NAME=$BUILD_NAME"
+                echo "BUILD_PIPELINE_NAME=$BUILD_PIPELINE_NAME"
+                echo "BUILD_TEAM_NAME=$BUILD_TEAM_NAME"
+
+                echo "sleeping for 10 seconds"
+                sleep 10
+
+                BUILD_URL=$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+
+                echo "BUILD_URL=$BUILD_URL"
+  - name: feature-tests
+    plan:
+      - get: meta
+      - get: test-runner
+      - get: src
+        trigger: true
+      - task: feature-tests
+        image: test-runner
+        config:
+          platform: linux
+          inputs:
+            - name: meta
+            - name: src
+          run:
+            path: /bin/sh
+            args:
+              - -exc
+              - |
+                set +x
+
+                ATC_EXTERNAL_URL=`cat meta/atc-external-url`
+                BUILD_ID=`cat meta/build-id`
+                BUILD_JOB_NAME=`cat meta/build-job-name`
+                BUILD_NAME=`cat meta/build-name`
+                BUILD_PIPELINE_NAME=`cat meta/build-pipeline-name`
+                BUILD_TEAM_NAME=`cat meta/build-team-name`
+
+
+
+                echo "... doing some genuine preparation"
+                cd src/
+
+                BUILD_REF=`git rev-parse --short HEAD`
+
+                bundle install
+                echo "... waiting some extra time before starting cucumber"
+                sleep 30
+                echo "... starting cucumber"
+
+                RUBYOPT='-W:no-deprecated -W:no-experimental' \
+                BUILD_REF=$BUILD_REF \
+                BUILD_ID=$BUILD_ID \
+                BUILD_JOB_NAME=$BUILD_JOB_NAME \
+                BUILD_NAME=$BUILD_NAME \
+                BUILD_PIPELINE_NAME=$BUILD_PIPELINE_NAME \
+                BUILD_TEAM_NAME=$BUILD_TEAM_NAME \
+                ELASTICSEARCH_URL=http://es01:9200 \
+                bundle exec cucumber

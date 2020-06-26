@@ -1,0 +1,9 @@
+.DS_Store
+
+concourse/ci-stack/keys/web/authorized_worker_keys
+concourse/ci-stack/keys/web/session_signing_key
+concourse/ci-stack/keys/web/tsa_host_key
+concourse/ci-stack/keys/web/tsa_host_key.pub
+concourse/ci-stack/keys/worker/tsa_host_key.pub
+concourse/ci-stack/keys/worker/worker_key
+concourse/ci-stack/keys/worker/worker_key.pub
