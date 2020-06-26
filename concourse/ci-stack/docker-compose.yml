@@ -86,13 +86,15 @@ services:
       options:
         max-file: "5"
         max-size: "10m"
+    networks:
+      - elastic
 
   web:
     image: concourse/concourse
     container_name: web
     command: web
-    links: [db]
-    depends_on: [db]
+    links: [db, es01]
+    depends_on: [db, es01]
     ports: ["8080:8080"]
     volumes: ["./keys/web:/concourse-keys"]
     environment:
@@ -108,6 +110,8 @@ services:
       options:
         max-file: "5"
         max-size: "10m"
+    networks:
+      - elastic
 
   worker:
     image: concourse/concourse
@@ -127,6 +131,8 @@ services:
       options:
         max-file: "5"
         max-size: "10m"
+    networks:
+      - elastic
 
 volumes:
   data01:
