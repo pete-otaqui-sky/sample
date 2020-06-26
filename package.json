@@ -1,0 +1,18 @@
+{
+  "name": "sample",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:pete-otaqui-sky/sample.git",
+  "author": "Pete Otaqui <pete.otaqui@sky.uk>",
+  "license": "MIT",
+  "scripts": {
+    "fetch": "node concourse/fetch-concourse-data.js",
+    "test-runner": "npm run test-runner:build && npm run test-runner:push",
+    "test-runner:build": "docker build -t peteotaqui/test-runner:latest ./concourse/test-runner",
+    "test-runner:push": "docker push peteotaqui/test-runner:latest",
+    "set-pipeline": "fly-local -t main sp -p dawt -c ./concourse/pipeline.yml"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.0"
+  }
+}

@@ -1,3 +1,5 @@
+node_modules
+
 .DS_Store
 
 concourse/ci-stack/keys/web/authorized_worker_keys
