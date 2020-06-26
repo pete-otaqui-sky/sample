@@ -6,7 +6,7 @@ def post_to_top(type, duration)
   timeNow = Time.now
   timeUTC = timeNow.utc.iso8601
   timeLong = timeNow.to_i
-  puts "TIME #{timeNow} #{timeUTC} #{timeLong}"
+  Kernel.puts "TIME #{timeNow} #{timeUTC} #{timeLong}"
   server_url = "http://localhost:9200/scs-data-concourse/cucumber"
   doc = {
     "@timestamp": timeUTC,
@@ -24,10 +24,10 @@ def post_to_top(type, duration)
       dataset: "nowtv-europe.nowtv-europe-master.89399646.master-nowtv-web-release-functional"
     },
     ci: {
-      ref: BUILD_REF,
+      ref: ENV["BUILD_REF"],
       start_time: timeUTC,
       end_time: timeUTC,
-      job_name: BRANCH
+      job_name: ENV["BUILD_JOB_NAME"]
     }
   }
   puts doc
