@@ -46,7 +46,7 @@ async function main() {
       const duration = build.end_time - build.start_time;
       const job_name = build.job_name;
       const scsDoc = {
-        "@timestamp": "2020-06-26T11:46:27Z",
+        "@timestamp": build.start_time,
         service: {
           name: "Concourse",
           version: "5.6.0",
@@ -57,7 +57,7 @@ async function main() {
           kind: "state",
           action: "Build Status",
           module: "concourse.jobs",
-          code: 2672295,
+          code: versionId,
           dataset: `main.dawt.${versionId}.${job_name}`,
         },
         ci: {
