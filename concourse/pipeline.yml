@@ -88,17 +88,15 @@ jobs:
                 BUILD_PIPELINE_NAME=`cat meta/build-pipeline-name`
                 BUILD_TEAM_NAME=`cat meta/build-team-name`
 
-
-
-                echo "... doing some genuine preparation"
                 cd src/
 
                 BUILD_REF=`git rev-parse --short HEAD`
 
                 bundle install
-                echo "... waiting some extra time before starting cucumber"
-                sleep 30
-                echo "... starting cucumber"
+
+                # echo "... waiting some extra time before starting cucumber"
+                # sleep 30
+                # echo "... starting cucumber"
 
                 RUBYOPT='-W:no-deprecated -W:no-experimental' \
                 BUILD_REF=$BUILD_REF \
