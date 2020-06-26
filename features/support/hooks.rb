@@ -7,7 +7,7 @@ def post_to_top(type, duration)
   timeUTC = timeNow.utc.iso8601
   timeLong = timeNow.to_i
   Kernel.puts "TIME #{timeNow} #{timeUTC} #{timeLong}"
-  server_url = "http://localhost:9200/scs-data-concourse/cucumber"
+  server_url = "#{ENV["ELASTICSEARCH_URL"]}/scs-data-concourse/cucumber"
   dataset = "#{ENV["BUILD_TEAM_NAME"]}.#{ENV["BUILD_PIPELINE_NAME"]}.#{ENV["BUILD_ID"]}.#{ENV["BUILD_JOB_NAME"]}"
   doc = {
     "@timestamp": timeUTC,
@@ -22,7 +22,7 @@ def post_to_top(type, duration)
       action: "Build Status",
       module: "concourse.features",
       code: 2672295,
-      dataset: "nowtv-europe.nowtv-europe-master.89399646.master-nowtv-web-release-functional"
+      dataset: dataset
     },
     ci: {
       ref: ENV["BUILD_REF"],
@@ -31,8 +31,8 @@ def post_to_top(type, duration)
       job_name: ENV["BUILD_JOB_NAME"]
     }
   }
-  puts doc
-  client = Elasticsearch::Client.new log: true
+  Kernel.puts doc
+  client = Elasticsearch::Client.new url:server_url, log: true
   client.index  index: 'scs-data-concourse', type: '_doc', body: doc
 end
 
