@@ -13,6 +13,7 @@
     "set-pipeline": "fly-local -t main sp -p dawt -c ./concourse/pipeline.yml"
   },
   "dependencies": {
+    "elasticsearch": "^16.7.1",
     "node-fetch": "^2.6.0"
   }
 }
