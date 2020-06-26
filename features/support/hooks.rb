@@ -34,3 +34,7 @@ def post_to_top(type, duration)
   client = Elasticsearch::Client.new log: true
   client.index  index: 'scs-data-concourse', type: '_doc', body: doc
 end
+
+Before do
+  post_to_top('start', 0)
+end
