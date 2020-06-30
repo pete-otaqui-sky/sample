@@ -63,6 +63,20 @@ services:
     networks:
       - elastic
 
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.7.1
+    container_name: logstash
+    links:
+      - es01
+    volumes:
+      - ./configuration/logstash-pipeline:/usr/share/logstash/pipeline
+      - ./configuration/logstash-config:/usr/share/logstash/config
+    command: logstash -f /usr/share/logstash/pipeline/logstash.conf
+    depends_on:
+      - es01
+    networks:
+      - elastic
+
   kib01:
     image: docker.elastic.co/kibana/kibana:7.7.1
     container_name: kib01
