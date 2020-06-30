@@ -37,16 +37,25 @@ function writeElastic(body) {
 
 async function main() {
   const versions = await fetchConcourse();
+  console.log("Got", versions.length, "versions");
   for (let i = 0, imax = versions.length; i < imax; i += 1) {
     const versionId = versions[i].id;
     const commitRef = versions[i].version.ref.substr(0, 7);
     const inputTo = await fetchConcourse(`/${versionId}/input_to`);
+    console.log(
+      "...",
+      "Current version was an input to",
+      inputTo.length,
+      "builds"
+    );
     for (let j = 0, jmax = inputTo.length; j < jmax; j += 1) {
       const build = inputTo[j];
       const duration = build.end_time - build.start_time;
       const job_name = build.job_name;
+      const start_time = new Date(build.start_time * 1000);
+      const end_time = new Date(build.end_time * 1000);
       const scsDoc = {
-        "@timestamp": build.start_time,
+        "@timestamp": start_time,
         service: {
           name: "Concourse",
           version: "5.6.0",
@@ -62,12 +71,13 @@ async function main() {
         },
         ci: {
           ref: commitRef,
-          start_time: build.start_time,
-          end_time: build.end_time,
+          start_time: start_time,
+          end_time: end_time,
           job_name: job_name,
         },
       };
-      await writeElastic(scsDoc);
+      const result = await writeElastic(scsDoc);
+      console.log("...", "...", "Wrote to elastic", result);
     }
   }
 }
