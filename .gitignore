@@ -10,3 +10,4 @@ concourse/ci-stack/keys/web/tsa_host_key.pub
 concourse/ci-stack/keys/worker/tsa_host_key.pub
 concourse/ci-stack/keys/worker/worker_key
 concourse/ci-stack/keys/worker/worker_key.pub
+concourse/ci-stack/postgres-data
