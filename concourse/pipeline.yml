@@ -105,5 +105,5 @@ jobs:
                 BUILD_PIPELINE_NAME=$BUILD_PIPELINE_NAME \
                 BUILD_TEAM_NAME=$BUILD_TEAM_NAME \
                 ELASTICSEARCH_URL=http://es01:9200 \
-                LOGSTASH_URL=http://es01:9200 \
+                LOGSTASH_URL=http://logstash:6044/scs-data-concourse/_doc \
                 bundle exec cucumber

@@ -34,7 +34,7 @@ def post_to_top(type, duration)
     }
   }
 
-  options = { :body => doc }
+  options = { :body => doc.to_json, :headers: { 'Content-Type': 'application/json' } }
   HTTParty.post(url, options)
   # client = Elasticsearch::Client.new url:server_url, log: true
   # client.index  index: 'scs-data-concourse', type: '_doc', body: doc
