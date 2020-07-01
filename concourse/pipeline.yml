@@ -17,7 +17,6 @@ resources:
     type: registry-image
     source:
       repository: docker.io/peteotaqui/test-runner
-      tag: 1.0.0
 
 jobs:
   - name: print-meta
