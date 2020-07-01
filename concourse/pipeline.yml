@@ -11,7 +11,9 @@ resources:
     source:
       uri: https://github.com/pete-otaqui-sky/sample.git
       branch: master
-  - name: meta
+  - name: meta-print-meta
+    type: meta
+  - name: meta-test-runner
     type: meta
   - name: test-runner
     type: registry-image
@@ -21,7 +23,7 @@ resources:
 jobs:
   - name: print-meta
     plan:
-      - get: meta
+      - get: meta-print-meta
       - get: src
         trigger: true
       - task: print-meta
@@ -31,7 +33,7 @@ jobs:
             type: docker-image
             source: { repository: alpine }
           inputs:
-            - name: meta
+            - name: meta-print-meta
             - name: src
           run:
             path: /bin/sh
@@ -40,12 +42,13 @@ jobs:
               - |
                 set +x
 
-                ATC_EXTERNAL_URL=`cat meta/atc-external-url`
-                BUILD_ID=`cat meta/build-id`
-                BUILD_JOB_NAME=`cat meta/build-job-name`
-                BUILD_NAME=`cat meta/build-name`
-                BUILD_PIPELINE_NAME=`cat meta/build-pipeline-name`
-                BUILD_TEAM_NAME=`cat meta/build-team-name`
+                DIR=meta-print-meta
+                ATC_EXTERNAL_URL=`cat $DIR/atc-external-url`
+                BUILD_ID=`cat $DIR/build-id`
+                BUILD_JOB_NAME=`cat $DIR/build-job-name`
+                BUILD_NAME=`cat $DIR/build-name`
+                BUILD_PIPELINE_NAME=`cat $DIR/build-pipeline-name`
+                BUILD_TEAM_NAME=`cat $DIR/build-team-name`
 
                 echo "ATC_EXTERNAL_URL=$ATC_EXTERNAL_URL"
                 echo "BUILD_ID=$BUILD_ID"
@@ -60,9 +63,13 @@ jobs:
                 BUILD_URL=$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
                 echo "BUILD_URL=$BUILD_URL"
+
+                echo ""
+
+                ls -laR $DIR
   - name: feature-tests
     plan:
-      - get: meta
+      - get: meta-test-runner
       - get: test-runner
       - get: src
         trigger: true
@@ -71,7 +78,7 @@ jobs:
         config:
           platform: linux
           inputs:
-            - name: meta
+            - name: meta-test-runner
             - name: src
           run:
             path: /bin/sh
@@ -80,12 +87,13 @@ jobs:
               - |
                 set +x
 
-                ATC_EXTERNAL_URL=`cat meta/atc-external-url`
-                BUILD_ID=`cat meta/build-id`
-                BUILD_JOB_NAME=`cat meta/build-job-name`
-                BUILD_NAME=`cat meta/build-name`
-                BUILD_PIPELINE_NAME=`cat meta/build-pipeline-name`
-                BUILD_TEAM_NAME=`cat meta/build-team-name`
+                DIR=meta-test-runner
+                ATC_EXTERNAL_URL=`cat $DIR/atc-external-url`
+                BUILD_ID=`cat $DIR/build-id`
+                BUILD_JOB_NAME=`cat $DIR/build-job-name`
+                BUILD_NAME=`cat $DIR/build-name`
+                BUILD_PIPELINE_NAME=`cat $DIR/build-pipeline-name`
+                BUILD_TEAM_NAME=`cat $DIR/build-team-name`
 
                 cd src/
 
