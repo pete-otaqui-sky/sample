@@ -6,10 +6,7 @@ def post_to_top(type, duration)
   timeNow = Time.now
   timeUTC = timeNow.utc.iso8601
   timeLong = timeNow.to_i
-  Kernel.puts "TIME #{timeNow} #{timeUTC} #{timeLong}"
   url = "#{ENV["LOGSTASH_URL"]}"
-  Kernel.puts "URL: #{url}"
-  Kernel.puts ENV.to_a
   dataset = "#{ENV["BUILD_TEAM_NAME"]}.#{ENV["BUILD_PIPELINE_NAME"]}.#{ENV["BUILD_ID"]}.#{ENV["BUILD_JOB_NAME"]}"
   doc = {
     # "@timestamp": timeUTC,
