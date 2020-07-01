@@ -68,12 +68,14 @@ services:
     container_name: logstash
     links:
       - es01
+      - worker
     volumes:
       - ./configuration/logstash-pipeline:/usr/share/logstash/pipeline
       - ./configuration/logstash-config:/usr/share/logstash/config
     command: logstash -f /usr/share/logstash/pipeline/logstash.conf
     depends_on:
       - es01
+      - worker
     ports:
       - 5044:5044
       - 6044:6044
@@ -142,6 +144,7 @@ services:
     links: [web, es01]
     stop_signal: SIGUSR2
     environment:
+      LOGSTASH_URL: http://logstash:6044/scs-data-concourse/_doc
       ELASTICSEARCH_URL: http://es01:9200
       ELASTICSEARCH_HOSTS: http://es01:9200
       CONCOURSE_TSA_HOST: web:2222
