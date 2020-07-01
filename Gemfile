@@ -13,4 +13,7 @@ gem 'chromedriver-helper', '2.1.0', :group => :local
 gem 'chrome_remote', '~> 0.2.0'
 
 # Elasticsearch
-gem 'elasticsearch'
+# gem 'elasticsearch'
+
+# HTTParty for posting to Logstash
+gem 'httparty'

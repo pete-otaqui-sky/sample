@@ -1,5 +1,5 @@
 
-require('elasticsearch')
+require('httparty')
 
 
 def post_to_top(type, duration)
@@ -7,10 +7,10 @@ def post_to_top(type, duration)
   timeUTC = timeNow.utc.iso8601
   timeLong = timeNow.to_i
   Kernel.puts "TIME #{timeNow} #{timeUTC} #{timeLong}"
-  server_url = "#{ENV["ELASTICSEARCH_URL"]}"
+  url = ENV["LOGSTASH_URL"]
   dataset = "#{ENV["BUILD_TEAM_NAME"]}.#{ENV["BUILD_PIPELINE_NAME"]}.#{ENV["BUILD_ID"]}.#{ENV["BUILD_JOB_NAME"]}"
   doc = {
-    "@timestamp": timeUTC,
+    # "@timestamp": timeUTC,
     service: {
       name: "Cucumber",
       version: "1.0.0"
@@ -31,9 +31,11 @@ def post_to_top(type, duration)
       job_name: ENV["BUILD_JOB_NAME"]
     }
   }
-  Kernel.puts doc
-  client = Elasticsearch::Client.new url:server_url, log: true
-  client.index  index: 'scs-data-concourse', type: '_doc', body: doc
+
+  options = { :body => doc }
+  HTTParty.post(url, options)
+  # client = Elasticsearch::Client.new url:server_url, log: true
+  # client.index  index: 'scs-data-concourse', type: '_doc', body: doc
 end
 
 Before do
