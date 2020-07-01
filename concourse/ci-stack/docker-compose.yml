@@ -64,7 +64,7 @@ services:
       - elastic
 
   logstash:
-    image: docker.elastic.co/logstash/logstash:7.7.1
+    image: peteotaqui/logstasher
     container_name: logstash
     links:
       - es01
@@ -74,6 +74,9 @@ services:
     command: logstash -f /usr/share/logstash/pipeline/logstash.conf
     depends_on:
       - es01
+    ports:
+      - 5044:5044
+      - 6044:6044
     networks:
       - elastic
 

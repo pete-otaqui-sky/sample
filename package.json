@@ -10,6 +10,9 @@
     "test-runner": "npm run test-runner:build && npm run test-runner:push",
     "test-runner:build": "docker build -t peteotaqui/test-runner:latest ./concourse/test-runner",
     "test-runner:push": "docker push peteotaqui/test-runner:latest",
+    "logstasher": "npm run logstasher:build && npm run logstasher:push",
+    "logstasher:build": "docker build -t peteotaqui/logstasher:latest ./concourse/logstasher",
+    "logstasher:push": "docker push peteotaqui/logstasher:latest",
     "set-pipeline": "fly-local -t main sp -p dawt -c ./concourse/pipeline.yml"
   },
   "dependencies": {
