@@ -99,7 +99,7 @@ jobs:
 
                 BUILD_REF=`git rev-parse --short HEAD`
 
-                bundle install
+                bundle install --quiet
 
                 # echo "... waiting some extra time before starting cucumber"
                 # sleep 30
