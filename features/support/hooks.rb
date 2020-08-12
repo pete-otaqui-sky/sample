@@ -38,9 +38,9 @@ def post_to_top(type, duration)
 end
 
 Before do
-  post_to_top('start', 0)
+  # post_to_top('start', 0)
 end
 
 After do
-  post_to_top('end', 0)
+  # post_to_top('end', 0)
 end

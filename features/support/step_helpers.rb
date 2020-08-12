@@ -25,4 +25,4 @@ end
 
 Capybara.run_server = false
 
-Capybara.app_host = 'http://www.google.com'
+Capybara.app_host = 'https://www.google.com'
